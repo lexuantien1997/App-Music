@@ -1,0 +1,242 @@
+﻿<UserControl x:Class="App_Music.Chart.ucChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:App_Music.Chart"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="615" d:DesignWidth="930" FontFamily="cambria">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--<Grid>
+        <Grid.Resources>
+            <local:ChangeValue ValueChange="3" x:Key="ChangeSomething"></local:ChangeValue>
+
+            <Style TargetType="ToggleButton" x:Key="SetToggleButton">
+                <Setter Property="Background" Value="#BBBBBB"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="Width" Value="{Binding ElementName=dpSong, Path=ActualWidth ,Converter={StaticResource ResourceKey=ChangeSomething}}"/>
+
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="#E74C3C"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="SetTextBlockText">
+                <Setter Property="FontSize" Value="26"/>
+                <Setter Property="Foreground" Value="#007ACC"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Best song chart"      Style="{StaticResource SetTextBlockText}" />
+        <TextBlock Grid.Row="1" Grid.Column="3"  Text="Best MV chart"       Style="{StaticResource SetTextBlockText}" />
+        <TextBlock Grid.Row="1" Grid.Column="5"  Text="Best playlist chart" Style="{StaticResource SetTextBlockText}" />
+
+        <Grid Grid.Row="3" Grid.Column="1">
+            <DockPanel x:Name="dpSong"  LastChildFill="False">
+                <ToggleButton  x:Name="tggVietNamSong"     Content="V-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name="tggUkSong"           Content="US/UK" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name="tggKoreaSong"        Content="K-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+            </DockPanel>
+        </Grid>
+        <Grid  Grid.Row="3" Grid.Column="3">
+            <DockPanel x:Name="dpMV" LastChildFill="False">
+                <ToggleButton x:Name="tggVietNamMV"        Content="V-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name="tggUkMV"             Content="US/UK" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name="tggKoreaMV"          Content="K-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="3" Grid.Column="5">
+            <DockPanel x:Name="dpPlaylist" LastChildFill="False">
+                <ToggleButton x:Name="tggVietNamPlaylist"  Content="V-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name="tggUkPlaylist"       Content="US/UK" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+                <ToggleButton x:Name ="tggKoreaPlaylist"   Content="K-POP" Style="{StaticResource ResourceKey=SetToggleButton}"/>
+            </DockPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="4" Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <StackPanel >
+                
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="4" Grid.Column="3" ScrollViewer.HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <StackPanel >
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="4" Grid.Column="5" ScrollViewer.HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>-->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+
+
+        <!--Display country-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <DockPanel x:Name="dpType" Grid.Column="1" LastChildFill="True">
+                <DockPanel.Resources>
+                    <local:ChangeValue ValueChange="3" x:Key="ChangeSomething"></local:ChangeValue>
+                </DockPanel.Resources>
+                <ToggleButton x:Name="tggUSUK" Click="tggUSUK_Click" Content="US/UK" Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpType, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
+                <ToggleButton x:Name="tggVPop" Click="tggVPop_Click" Content="V-POP"   Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpType, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
+                <ToggleButton x:Name="tggKPop" Click="tggKPop_Click" Content="K-POP"  Style="{DynamicResource DisplayButtonTypeMusic}" />
+            </DockPanel>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Margin="0 0 0 0" Source="C:\Users\LeXuanTien\Documents\GitHub\App Music\hjdhKlD-music-wallpaper-abstract.jpg" Stretch="Fill"></Image>
+            <Image Grid.Column="1" Margin="0 0 0 0" Source="C:\Users\LeXuanTien\Documents\GitHub\App Music\SxyTRgt-music-wallpaper-abstract.jpg" Stretch="Fill"></Image>
+            <Image Grid.Column="2" Margin="0 0 0 0"></Image>
+
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+
+            <!--SONG-->
+            <Grid Grid.Column="0">
+
+                <ListBox ItemTemplate="{DynamicResource charts}" x:Name="lbSong" BorderThickness="0" Background="#3C3C3C" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+
+            </Grid>
+
+            <!--MV-->
+            <Grid Grid.Column="1">
+                <ListBox ItemTemplate="{DynamicResource charts}" x:Name="lbMV" BorderThickness="0" Background="#3C3C3C" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+            </Grid>
+
+            <!--PLAYLIST-->
+            <Grid Grid.Column="2">
+                <ListBox ItemTemplate="{DynamicResource charts}" x:Name="lbPlaylist" BorderThickness="0" Background="#3C3C3C" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+            </Grid>
+
+
+        </Grid>
+
+        <!-- SONG CHART LEFT-->
+        <!--
+                <ListBox Grid.Column="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <Grid Margin="7 5 4 0" Height="53">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="53"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    -->
+        <!--Display number's song-->
+        <!--
+                    <Image x:Name="imageCount" Grid.Column="0"></Image>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        -->
+        <!--Display song name-->
+        <!--
+                        <Grid Grid.Row="0">
+
+                            -->
+        <!--song name-->
+        <!--
+                            <TextBlock x:Name="tbSongName"></TextBlock>
+                        </Grid>
+                        -->
+        <!--Display artist name and listen view-->
+        <!--
+                        <Grid Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+
+                            -->
+        <!--Artist name-->
+        <!--
+                            <TextBlock x:Name="tbArtistName" Grid.Column="0"></TextBlock>
+                            -->
+        <!--Listen view-->
+        <!--
+                            <TextBlock x:Name="tbView" Grid.Column="1"></TextBlock>
+
+                        </Grid>
+                    </Grid>
+                    
+                </Grid>
+            </ListBox>-->
+
+        <!-- SONG CHART RIGHT-->
+
+
+
+    </Grid>
+</UserControl>

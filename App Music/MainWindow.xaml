@@ -1,0 +1,179 @@
+﻿<Window x:Class="App_Music.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:App_Music"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="1130" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None">
+
+    <!--Set style of material design-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!--Display Menu and Logo for App -->
+        <Grid  Background="#2B2B2B" Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+
+            <!--Logo-->
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+                    <!--Display name of this app-->
+                    <Border Grid.Row="0">
+                        <DockPanel  VerticalAlignment="Center" LastChildFill="False">
+                            <Image Stretch="Uniform" Source="Image/Icon/menu.png" Margin="18 8 8 8"></Image>
+                            <TextBlock Text=" OPTIONS " Foreground="White" Padding="1 0 0 3" FontWeight="Bold" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="2">
+                <Separator/>
+                <ToggleButton x:Name="btnSetting" Style="{DynamicResource DisplayButtonMenu}" Click="btnSetting_Click" >
+                    <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                        <Image Source="Image/Icon/settings.png" Style="{DynamicResource SetImageMenu}"></Image>
+                        <Label Content="Settings"  Style="{DynamicResource SetLabelMenu}" ></Label>
+                    </DockPanel>
+                </ToggleButton>
+            </StackPanel>
+
+            <!--Menu Options-->
+            <Border Grid.Row="1">
+                <StackPanel x:Name="spMenu">
+
+                    <ToggleButton x:Name="btnHome" Style="{DynamicResource DisplayButtonMenu}" Click="btnHome_Click" >
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/icons8-Home-50.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Home"  Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnTopics" Style="{DynamicResource DisplayButtonMenu}" Click="btnTopics_Click" >
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/diagrams.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Topics" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnCharts" Style="{DynamicResource DisplayButtonMenu}" Click="btnCharts_Click" >
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/statistics.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Charts" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnSongs" Style="{DynamicResource DisplayButtonMenu}" Click="btnSongs_Click">
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/music-headphones.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Songs" Style="{DynamicResource SetLabelMenu}"  ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnPlaylists" Style="{DynamicResource DisplayButtonMenu}" Click="btnPlaylists_Click">
+                        <DockPanel  HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/playlist.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Playlists" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnVideos" Style="{DynamicResource DisplayButtonMenu}" Click="btnVideos_Click" >
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/clapperboard.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Videos" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnArtists" Style="{DynamicResource DisplayButtonMenu}" Click="btnArtists_Click">
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/man-singing-with-a-microphone.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Artists" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnMusicFile" Style="{DynamicResource DisplayButtonMenu}" Click="btnMusicFile_Click">
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/desktop-monitor.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Music in file" Style="{DynamicResource SetLabelMenu}" ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="btnDownloading" Style="{DynamicResource DisplayButtonMenu}" Click="btnDownloading_Click">
+                        <DockPanel HorizontalAlignment="Left" Width="{Binding ElementName=spMenu, Path=ActualWidth}">
+                            <Image Source="Image/Icon/download-button.png" Style="{DynamicResource SetImageMenu}"></Image>
+                            <Label Content="Downloading" Style="{DynamicResource SetLabelMenu}"  ></Label>
+                        </DockPanel>
+                    </ToggleButton>
+
+
+                </StackPanel>
+            </Border>
+
+
+        </Grid>
+
+        <!--Display taskbar and main content -->
+        <Grid Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!--Taskbar-->
+            <Border Background="White" Grid.Row="0" MouseDown="DockPanel_MouseDown">
+                <DockPanel x:Name="dpTaskbar" HorizontalAlignment="Right" >
+                    <Button x:Name="btnMinimize" Click="btnMinimize_Click" Content="__" Style="{DynamicResource DisplayButtonTaskBar}"/>
+                    <Button x:Name="btnClose" Click="btnClose_Click" Content="X"  Style="{DynamicResource DisplayButtonTaskBar}"/>
+                </DockPanel>
+            </Border>
+
+
+            <!--Main content-->
+            <Border Background="Black" Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="58"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid  x:Name="GridMain">
+                        
+                    </Grid>
+
+                    <Grid Background="#404040" x:Name="gridMusic" Grid.Row="1">
+                        
+                    </Grid>
+                </Grid>
+            </Border>
+
+
+        </Grid>
+    </Grid>
+
+
+
+</Window>
