@@ -88,9 +88,10 @@
     <Compile Include="Chart\ucChart.xaml.cs">
       <DependentUpon>ucChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Class\ListChart.cs" />
     <Compile Include="Class\Manage.cs" />
     <Compile Include="Class\Song.cs" />
-    <Compile Include="Class\Charts.cs" />
+    <Compile Include="Class\Chart.cs" />
     <Compile Include="Class\TypeSong.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

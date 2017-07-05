@@ -1,6 +1,7 @@
 ﻿using App_Music.Class;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -17,14 +18,6 @@ namespace App_Music.Chart
     /// </summary>
     public partial class ucChart : UserControl, INotifyPropertyChanged
     {
-
-        #region Property
-
-        Charts V_Pop = new Charts();
-        Charts K_Pop;
-        Charts US_UK;
-
-        #endregion
 
         #region Binding data with INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,26 +36,7 @@ namespace App_Music.Chart
             InitializeComponent();
             DataContext = this;
             tggVPop_Click(null, null);
-
-            Loaded += UcChart_Loaded;
-
         }
-
-        #region Event Load data
-        private void UcChart_Loaded(object sender, RoutedEventArgs e)
-        {
-            //string html = Manage.CrawlData("bai-hat/top-20.nhac-viet.html");
-            //lbSong.ItemsSource = CrawlListSong(html, V_Pop.ListSong,TypeSong.Song);
-
-            string html = Manage.CrawlData("video/top-20.nhac-viet.tuan-27.2017.html");
-            lbMV.ItemsSource = CrawlListSong(html, V_Pop.ListMV, TypeSong.Video);
-
-            html = Manage.CrawlData("playlist/top-20.nhac-viet.tuan-27.2017.html");
-            lbPlaylist.ItemsSource = CrawlListSong(html, V_Pop.ListPlaylist, TypeSong.Playlist);
-        }
-        #endregion
-
-
 
 
         /// <summary>
@@ -118,14 +92,14 @@ namespace App_Music.Chart
         private string GetRealUrlVideo(string FakeUrl)
         {
             string result = Manage.CrawlDataInWebMobile(FakeUrl);
-            
+
             string pattern = @"http://vredir(.*?).mp4";
             string realUrlSong = Manage.GetFirstValueRegex(result, pattern, RegexOptions.Singleline).Value;
 
             return realUrlSong;
         }
 
-       
+
         #endregion
 
 
@@ -135,7 +109,7 @@ namespace App_Music.Chart
         /// <param name="FakeUrl">Url song</param>
         /// <param name="typeSong"> type song in Enum TypeSong</param>
         /// <returns></returns>
-        private string GetUrlByTypeSong(string FakeUrl,TypeSong typeSong)
+        private string GetUrlByTypeSong(string FakeUrl, TypeSong typeSong)
         {
             switch (typeSong)
             {
@@ -149,6 +123,8 @@ namespace App_Music.Chart
             return "";
         }
 
+
+
         #region Transfer data in website to a song
 
         /// <summary>
@@ -157,7 +133,7 @@ namespace App_Music.Chart
         /// <param name="input">string input</param>
         /// <param name="lSong">list song holds data</param>
         /// <param name="id">id song ++ </param>
-        private void GetSong(string input, List<Song> lSong, int id, TypeSong typeSong)
+        private void GetSong(string input, ObservableCollection<Song> lSong, int id, TypeSong typeSong)
         {
             Song song = new Song(); // Create a song
 
@@ -170,7 +146,7 @@ namespace App_Music.Chart
             song.UrlSong = result.Substring(index, result.Length - index - 1); // Add url song
 
             song.RealUrlDownload = GetUrlByTypeSong(song.UrlSong, typeSong); // Add real url song/playlist/video
-
+                                                                            
             // Get Singer name and song name
             pattern = @"title=""(.*?)"">";
             result = Manage.GetDataWithRegex(input, pattern)[0].Value;
@@ -196,8 +172,6 @@ namespace App_Music.Chart
 
         #endregion
 
-
-
         #region Set data when crawl in web
 
         /// <summary>
@@ -207,7 +181,7 @@ namespace App_Music.Chart
         /// <param name="lsong">list contains data</param>
         /// <param name="typeSong"> type of list song</param>
         /// <returns></returns>
-        List<Song> CrawlListSong(string input, List<Song> lsong, TypeSong typeSong)
+        ObservableCollection<Song> CrawlListSong(string input, ObservableCollection<Song> lsong, TypeSong typeSong)
         {
             // The query of Regex
             string pattern = @"<div class=""box_info_field"">(.*?)"">";
@@ -228,22 +202,22 @@ namespace App_Music.Chart
         {
             BindingMouseClick(tggUSUK);
 
-            if (US_UK == null)
+            if (ListChart.Us_Uk == null)
             {
-                US_UK = new Charts();
+                ListChart.Us_Uk = new Class.Chart();
                 string html = Manage.CrawlData("bai-hat/top-20.au-my.tuan-27.2017.html");
-                CrawlListSong(html, US_UK.ListSong,TypeSong.Song);
+                CrawlListSong(html, ListChart.Us_Uk.ListSong, TypeSong.Song);
 
                 html = Manage.CrawlData("video/top-20.au-my.tuan-27.2017.html");
-                CrawlListSong(html, US_UK.ListMV, TypeSong.Video);
+                CrawlListSong(html, ListChart.Us_Uk.ListMV, TypeSong.Video);
 
                 html = Manage.CrawlData("playlist/top-20.au-my.tuan-27.2017.html");
-                CrawlListSong(html, US_UK.ListPlaylist, TypeSong.Playlist);
+                CrawlListSong(html, ListChart.Us_Uk.ListPlaylist, TypeSong.Playlist);
             }
 
-            lbSong.ItemsSource = US_UK.ListSong;
-            lbMV.ItemsSource = US_UK.ListMV;
-            lbPlaylist.ItemsSource = US_UK.ListPlaylist;
+            lbSong.ItemsSource = ListChart.Us_Uk.ListSong;
+            lbMV.ItemsSource = ListChart.Us_Uk.ListMV;
+            lbPlaylist.ItemsSource = ListChart.Us_Uk.ListPlaylist;
 
         }
 
@@ -251,32 +225,45 @@ namespace App_Music.Chart
         {
             BindingMouseClick(tggVPop);
 
-            lbSong.ItemsSource = V_Pop.ListSong;
-            lbMV.ItemsSource = V_Pop.ListMV;
-            lbPlaylist.ItemsSource = V_Pop.ListPlaylist;
-            
+            if (ListChart.V_Pop == null)
+            {
+                ListChart.V_Pop = new Class.Chart();
+                string html = Manage.CrawlData("bai-hat/top-20.nhac-viet.html");
+                CrawlListSong(html, ListChart.V_Pop.ListSong, TypeSong.Song);
+
+                html = Manage.CrawlData("video/top-20.nhac-viet.tuan-27.2017.html");
+                CrawlListSong(html, ListChart.V_Pop.ListMV, TypeSong.Video);
+
+                html = Manage.CrawlData("playlist/top-20.nhac-viet.tuan-27.2017.html");
+                CrawlListSong(html, ListChart.V_Pop.ListPlaylist, TypeSong.Playlist);
+            }
+
+            lbSong.ItemsSource = ListChart.V_Pop.ListSong;
+            lbMV.ItemsSource = ListChart.V_Pop.ListMV;
+            lbPlaylist.ItemsSource = ListChart.V_Pop.ListPlaylist;
+
         }
 
         private void tggKPop_Click(object sender, RoutedEventArgs e)
         {
             BindingMouseClick(tggKPop);
 
-            if (K_Pop == null)
+            if (ListChart.K_Pop == null)
             {
-                K_Pop = new Charts();
+                ListChart.K_Pop = new Class.Chart();
                 string html = Manage.CrawlData("bai-hat/top-20.nhac-han.tuan-27.2017.html");
-                CrawlListSong(html, K_Pop.ListSong, TypeSong.Song);
+                CrawlListSong(html, ListChart.K_Pop.ListSong, TypeSong.Song);
 
                 html = Manage.CrawlData("video/top-20.nhac-han.tuan-27.2017.html");
-                CrawlListSong(html, K_Pop.ListMV, TypeSong.Video);
+                CrawlListSong(html, ListChart.K_Pop.ListMV, TypeSong.Video);
 
                 html = Manage.CrawlData("playlist/top-20.nhac-han.tuan-27.2017.html");
-                CrawlListSong(html, K_Pop.ListPlaylist, TypeSong.Playlist);
+                CrawlListSong(html, ListChart.K_Pop.ListPlaylist, TypeSong.Playlist);
             }
 
-            lbSong.ItemsSource = K_Pop.ListSong;
-            lbMV.ItemsSource = K_Pop.ListMV;
-            lbPlaylist.ItemsSource = K_Pop.ListPlaylist;
+            lbSong.ItemsSource = ListChart.K_Pop.ListSong;
+            lbMV.ItemsSource = ListChart.K_Pop.ListMV;
+            lbPlaylist.ItemsSource = ListChart.K_Pop.ListPlaylist;
         }
 
         ToggleButton tggPrevious = null;
