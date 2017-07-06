@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace App_Music.Class
 {
-   public static class ListChart
+    public static class ListChart
     {
-        private static Chart k_Pop;
-        private static Chart v_Pop;
-        private static Chart us_Uk;
+        private static ChartSong k_Pop = new ChartSong();
+        private static ChartSong v_Pop = new ChartSong();
+        private static ChartSong us_Uk = new ChartSong();
 
-        public static Chart K_Pop { get => k_Pop; set => k_Pop = value; }
-        public static Chart V_Pop { get => v_Pop; set => v_Pop = value; }
-        public static Chart Us_Uk { get => us_Uk; set => us_Uk = value; }
+        public static ChartSong K_Pop { get => k_Pop; set => k_Pop = value; }
+        public static ChartSong V_Pop { get => v_Pop; set => v_Pop = value; }
+        public static ChartSong Us_Uk { get => us_Uk; set => us_Uk = value; }
     }
 }

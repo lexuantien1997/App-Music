@@ -106,26 +106,58 @@
 
         <!--Set data template of listbox charts-->
         <DataTemplate x:Key="charts">
-            <Grid Height="50"  Width="297">
+            <Grid Height="80"  Width="910">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="55"/>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="10" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <!-- Number Count -->
                 <TextBlock Grid.Column="0" Text="{Binding ID}" Foreground="White" FontSize="17" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 
-                <Grid Grid.Column="1">
+                <!--Photo of singer-->
+                <Image Grid.Column="2" Source="{Binding ImageSinger}"/>
+
+                <Grid Grid.Column="4">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <!-- Song Name -->
-                    <TextBlock TextWrapping="NoWrap" Margin="5 0 0 0" Grid.Row="0" FontWeight="DemiBold" Foreground="White" Text="{Binding SongName}" FontSize="14" VerticalAlignment="Center"></TextBlock>
-                    <!-- Artist Name -->
-                    <TextBlock Grid.Row="1" TextWrapping="NoWrap" Grid.Column ="0" Foreground="#CECECE" Margin="5 0 0 0" Text="{Binding SingerName}" FontSize="14" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Text="{Binding SongName}" TextWrapping="WrapWithOverflow" Margin="5 0 0 0" Grid.Row="0" FontWeight="DemiBold" Foreground="White"  FontSize="16" VerticalAlignment="Center"></TextBlock>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="230"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <!-- Artist Name -->
+                            <TextBlock Text="{Binding SingerName}" Grid.Row="1" TextWrapping="WrapWithOverflow" Grid.Column ="0" Foreground="#CECECE" Margin="5 0 0 0"  FontSize="16" VerticalAlignment="Center"></TextBlock>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width=" 10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Photo speaker-->
+                            <Image></Image>
+
+                            <!--Listen View-->
+                            <TextBlock Text="{Binding ListenView}" Grid.Column="2" TextWrapping="WrapWithOverflow" Foreground="#CECECE" Margin="5 0 0 0"  FontSize="14" VerticalAlignment="Center"></TextBlock>
+
+                        </Grid>
+                    </Grid>
                 </Grid>
+
+
 
             </Grid>
         </DataTemplate>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ namespace App_Music.Class
 {
     public static class Manage
     {
+
         private static int countSong=20;
 
         private static HttpClient client = new HttpClient()
@@ -59,6 +61,13 @@ namespace App_Music.Class
             var courseList = Regex.Match(input, pattern, rexOption);
             return courseList;
         }
+
+        public static void DownloadSong(Song song,string filter)
+        {
+            WebClient web = new WebClient();
+            web.DownloadFileAsync(new Uri(song.RealUrlDownload), AppDomain.CurrentDomain.BaseDirectory + "Download Song\\" + song.SongName + " - " + song.SingerName+filter);
+        }
+
     }
        
 }
