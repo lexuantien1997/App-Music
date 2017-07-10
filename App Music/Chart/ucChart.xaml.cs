@@ -1,16 +1,18 @@
-﻿using App_Music.Class;
+﻿using App_Music.Algorithm;
+using App_Music.Class;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-
+using xNet;
 namespace App_Music.Chart
 {
     /// <summary>
@@ -31,179 +33,56 @@ namespace App_Music.Chart
         }
         #endregion
 
-        public ucChart()
+        List<Song> CrawlAChart(string inputLink, List<Song> lSong, TypeSong typeSong)
         {
-            InitializeComponent();
-            ListChart.V_Pop.ListSong = new List<Song>();
-            string html = Manage.CrawlData(urlCharts.urlSongV_Pop);
-            lbMain.ItemsSource = CrawlListSong(html, ListChart.V_Pop.ListSong, TypeSong.Song);
+            string html = Manage.CrawlData(inputLink);
+            string pattern = @"<div class=""box_info_field"">(.*?)class=""last_weeks_position";
+            var data = Manage.GetDataWithRegex(html, pattern, RegexOptions.Singleline);
 
-            // BindingMouseClick(ref tggSong, ref tggPreviousTypeSong);
-            // tggVPop_Click(null, null);
-
-        }
-
-        private void tggSong_Click(object sender, RoutedEventArgs e)
-        {
-            BindingMouseClick(ref tggSong, ref tggPreviousTypeSong);
-            CheckClickInTypeSong();
-        }
-
-        private void tggPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            BindingMouseClick(ref tggPlaylist, ref tggPreviousTypeSong);
-            CheckClickInTypeSong();
-        }
-
-        private void tggMV_Click(object sender, RoutedEventArgs e)
-        {
-            BindingMouseClick( ref tggMV, ref tggPreviousTypeSong);
-            CheckClickInTypeSong();
-        }
-
-       private void CheckClickInTypeSong()
-        {
-            if (tggVPop.IsChecked == true)
-                ChooseConditional2CrawlData(ListChart.V_Pop, urlCharts.urlSongV_Pop, urlCharts.urlVideoV_Pop, urlCharts.urlPlaylistV_Pop);
-            else if (tggKPop.IsChecked == true)
-                ChooseConditional2CrawlData(ListChart.K_Pop, urlCharts.urlSongK_Pop, urlCharts.urlVideoK_Pop, urlCharts.urlPlaylistK_Pop);
-            else
-                ChooseConditional2CrawlData(ListChart.Us_Uk, urlCharts.urlSongUs_Uk, urlCharts.urlVideoUs_Uk, urlCharts.urlPlaylistUs_Uk);
-        }
-
-        #region Event Click Country
-        private void ChooseConditional2CrawlData(ChartSong chartSong, string urlSong, string urlVideo, string urlPlaylist)
-        {
-            if (tggSong.IsChecked == true)
+            foreach (Match item in data)
             {
-                if (chartSong.ListSong == null)
-                {
-                    chartSong.ListSong = new List<Song>();
-                    string html = Manage.CrawlData(urlSong);
-                    lbMain.ItemsSource = CrawlListSong(html, chartSong.ListSong, TypeSong.Song);
-                }
-                else
-                    lbMain.ItemsSource = chartSong.ListSong;
-
+                Song song = GetASong(item.Value, typeSong, (lSong.Count + 1).ToString());
+                lSong.Add(song);
             }
-            else if (tggPlaylist.IsChecked == true)
-            {
-                if (chartSong.ListPlaylist == null)
-                {
-                    chartSong.ListPlaylist = new List<Song>();
-                    string html = Manage.CrawlData(urlPlaylist);
-                    lbMain.ItemsSource = CrawlListSong(html, chartSong.ListPlaylist, TypeSong.Playlist);
-                }
-                else
-                    lbMain.ItemsSource = chartSong.ListPlaylist;
-            }
-            else if(tggMV.IsChecked==true)
-            {
-                if (chartSong.ListMV == null)
-                {
-                    chartSong.ListMV = new List<Song>();
-                    string html = Manage.CrawlData(urlVideo);
-                    lbMain.ItemsSource = CrawlListSong(html, chartSong.ListMV, TypeSong.Video);
-                }
-                else
-                    lbMain.ItemsSource = chartSong.ListMV;
-            }
+            return lSong;
         }
 
 
-        private void tggUSUK_Click(object sender, RoutedEventArgs e)
-        {
-            BindingMouseClick(ref tggUSUK, ref tggPreviousCountry);
-            ChooseConditional2CrawlData(ListChart.Us_Uk, urlCharts.urlSongUs_Uk, urlCharts.urlVideoUs_Uk, urlCharts.urlPlaylistUs_Uk);
 
+        Song GetASong(string input, TypeSong typeSong, string id)
+        {
+            Song song = new Song();
+            song.ID = @"/Image/ID Chart/_" + id + ".png"; // Get id song
+            song.TypeOfSong = typeSong;
+
+            // Get urlSong - singer name - artist - image singer
+            string pattern = @"""http://www.nhaccuatui(.*?)alt";
+            Match data = Manage.GetFirstValueRegex(input, pattern, RegexOptions.Singleline);
+
+            // Get url image singer and urlSong
+            pattern = @"http://(.*?)""";
+            MatchCollection links = Manage.GetDataWithRegex(data.Value, pattern);
+            song.UrlSong = links[0].Value.Substring(0, links[0].Length - 1).Replace("http://www.nhaccuatui.com/", ""); // UrlSong           
+            song.ImageSinger = links[1].Value.Substring(0, links[1].Length - 1); // ImageSinger
+
+            // Get Artist and Singer name
+            string[] value = GetSingerNameAndArtist(data.Value);
+            song.SongName = value[0]; // Add song name
+            song.SingerName = value[1]; // Add singer name
+
+            // Get Highest Position
+            pattern = @"></span>(.*?)</a>";
+            data = Manage.GetFirstValueRegex(input, pattern);
+            song.HighestPosition = data.Value.Replace("></span>", "").Replace("</a>", "");
+
+            return song;
         }
 
-        private void tggVPop_Click(object sender,  RoutedEventArgs e)
+        string[] GetSingerNameAndArtist(string input)
         {
-            BindingMouseClick(ref tggVPop, ref tggPreviousCountry);
-            ChooseConditional2CrawlData(ListChart.V_Pop, urlCharts.urlSongV_Pop , urlCharts.urlVideoV_Pop, urlCharts.urlPlaylistV_Pop);
-          
-        }
-
-        private void tggKPop_Click(object sender, RoutedEventArgs e)
-        {
-            BindingMouseClick(ref tggKPop, ref tggPreviousCountry);
-            ChooseConditional2CrawlData(ListChart.K_Pop, urlCharts.urlSongK_Pop, urlCharts.urlVideoK_Pop, urlCharts.urlPlaylistK_Pop);          
-        }
-
-        #endregion
-
-
-
-
-        #region Binding Mouse click
-        ToggleButton tggPreviousCountry = null;
-        ToggleButton tggPreviousTypeSong = null;
-        private void BindingMouseClick(ref ToggleButton tgg, ref ToggleButton tggPrev)
-        {
-            if (tggPrev == tgg)
-            {
-                tgg.IsChecked = true;
-                return;
-            }
-            if (tggPrev != null)
-                tggPrev.IsChecked = false;
-            tgg.IsChecked = true;
-            tggPrev = tgg;
-        }
-        #endregion
-
-        #region Set data when crawl in web
-
-        /// <summary>
-        /// List Song's crawled
-        /// </summary>
-        /// <param name="input">string html</param>
-        /// <param name="lsong">list contains data</param>
-        /// <param name="typeSong"> type of list song</param>
-        /// <returns></returns>
-        List<Song> CrawlListSong(string input, List<Song> lsong, TypeSong typeSong)
-        {
-            // The query of Regex
-            string pattern = @"<div class=""box_info_field"">(.*?)"">";
-
-            MatchCollection chart = Manage.GetDataWithRegex(input, pattern, RegexOptions.Singleline);
-
-            for (int i = 0; i < Manage.CountSong; i++)
-            {
-                GetSong(chart[i].ToString(), lsong, i, typeSong);
-            }
-            return lsong;
-        }
-
-        #endregion
-
-        #region Transfer data in website to a song
-
-        /// <summary>
-        /// Get data of a song
-        /// </summary>
-        /// <param name="input">string input</param>
-        /// <param name="lSong">list song holds data</param>
-        /// <param name="id">id song ++ </param>
-        private void GetSong(string input, List<Song> lSong, int id, TypeSong typeSong)
-        {
-            Song song = new Song(); // Create a song
-
-            song.ID = SetId(id); // Add id
-
-            // Get url song
-            string pattern = @"com/(.*?)""";
+            string pattern = @"title=""(.*?)"">";
             string result = Manage.GetDataWithRegex(input, pattern)[0].Value;
-            int index = result.IndexOf("com/") + 4; // Plus 4 because we'll split starting from / + 1 ( > /) 
-            song.UrlSong = result.Substring(index, result.Length - index - 1); // Add url song
-
-            song.RealUrlDownload = GetUrlByTypeSong(song.UrlSong, typeSong); // Add real url song/playlist/video
-
-            // Get Singer name and song name
-            pattern = @"title=""(.*?)"">";
-            result = Manage.GetDataWithRegex(input, pattern)[0].Value;
-            index = result.IndexOf("title=\"") + 7; // Plus 7 because we'll split starting from " ( > "). \: Using with special character
+            int index = result.IndexOf("title=\"") + 7; // Plus 7 because we'll split starting from " ( > "). \: Using with special character
             result = result.Substring(index, result.Length - index - 2); // sub 2 because SongAndSinger = ...">
 
             string[] split = { " - " }; // Conditional to split
@@ -217,47 +96,168 @@ namespace App_Music.Chart
                 SongSinger[1] = SongSinger[SongSinger.Length - 1];
             }
 
-            song.SongName = SongSinger[0]; // Add song name
-            song.SingerName = SongSinger[1]; // Add singer name
-
-            lSong.Add(song); // Add a song into list<song>
+            return SongSinger;
         }
 
-        #endregion
-
-        /// <summary>
-        /// Add 0 into id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private string SetId(int id)
+        public ucChart()
         {
-            if (id + 1 < 10)
-                return "0" + (id + 1).ToString();
-            return (id + 1).ToString();
+            InitializeComponent();
+
+
+            urlCharts.GetUrlCharts();
+            tggSong.IsChecked = true;
+            tggVPop.IsChecked = true;
+            SetMouseClickToggleButton(tggSong, ref tggPrevTypeSong);
+            tggVPop_Click(null, null);
         }
 
-        /// <summary>
-        /// Function will select a function suitable for a Song based on TypeSong
-        /// </summary>
-        /// <param name="FakeUrl">Url song</param>
-        /// <param name="typeSong"> type song in Enum TypeSong</param>
-        /// <returns></returns>
-        private string GetUrlByTypeSong(string FakeUrl, TypeSong typeSong)
+        ToggleButton tggPrevCountry = null;
+        ToggleButton tggPrevTypeSong = null;
+        void SetMouseClickToggleButton(ToggleButton tggCurrent, ref ToggleButton tggPrevious)
         {
-            switch (typeSong)
+            if (tggPrevious != null)
+                tggPrevious.IsChecked = false;
+            tggPrevious = tggCurrent;
+        }
+
+
+        private void tggTypeOfSong_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleButton tggCurrent = sender as ToggleButton;
+            SetMouseClickToggleButton(tggCurrent, ref tggPrevTypeSong);
+
+            if (tggVPop.IsChecked == true)
+                GetLinkSpecifyChart(ListChart.V_Pop, urlCharts.V_PopUrlSong, urlCharts.V_PopUrlPlaylist, urlCharts.V_PopUrlVideo);
+            else if (tggKPop.IsChecked == true)
+                GetLinkSpecifyChart(ListChart.K_Pop, urlCharts.K_PopUrlSong, urlCharts.K_PopUrlPlaylist, urlCharts.K_PopUrlVideo);
+            else
+                GetLinkSpecifyChart(ListChart.Us_Uk, urlCharts.Us_UkUrlSong, urlCharts.Us_UkUrlPlaylist, urlCharts.Us_UkUrlVideo);
+        }
+
+        void GetLinkSpecifyChart(ChartSong chartSong, string urlSong, string urlPlaylist, string urlVideo)
+        {
+            if (tggSong.IsChecked == true)
             {
-                case TypeSong.Song:
-                    return GetRealUrlSong(FakeUrl);
-                case TypeSong.Playlist:
-                    return GetRealUrlPlaylist(FakeUrl);
-                case TypeSong.Video:
-                    return GetRealUrlVideo(FakeUrl);
+                if (chartSong.ListSong == null)
+                {
+                    chartSong.ListSong = new List<Song>();
+                    chartSong.ListSong = CrawlAChart(urlSong, chartSong.ListSong, TypeSong.Song);
+                }
+                listBoxChart.ItemsSource = chartSong.ListSong;
             }
-            return "";
+            else if (tggPlaylist.IsChecked == true)
+            {
+                if (chartSong.ListPlaylist == null)
+                {
+                    chartSong.ListPlaylist = new List<Song>();
+                    chartSong.ListPlaylist = CrawlAChart(urlPlaylist, chartSong.ListPlaylist, TypeSong.Playlist);
+                }
+                listBoxChart.ItemsSource = chartSong.ListPlaylist;
+            }
+            else
+            {
+                if (chartSong.ListVideo == null)
+                {
+                    chartSong.ListVideo = new List<Song>();
+                    chartSong.ListVideo = CrawlAChart(urlVideo, chartSong.ListVideo, TypeSong.Video);
+                }
+                listBoxChart.ItemsSource = chartSong.ListVideo;
+            }
+
         }
 
-        #region Get Real Url Download Song - Video - Playlist
+        private void tggUSUK_Click(object sender, RoutedEventArgs e)
+        {
+            if (tggUSUK.IsChecked == false)
+            { tggUSUK.IsChecked = true; return; }
+
+            SetMouseClickToggleButton(tggUSUK, ref tggPrevCountry);
+            GetLinkSpecifyChart(ListChart.Us_Uk, urlCharts.Us_UkUrlSong, urlCharts.Us_UkUrlPlaylist, urlCharts.Us_UkUrlVideo);
+        }
+
+        private void tggVPop_Click(object sender, RoutedEventArgs e)
+        {
+            if (tggVPop.IsChecked == false)
+            { tggVPop.IsChecked = true; return; }
+
+            SetMouseClickToggleButton(tggVPop, ref tggPrevCountry);
+            GetLinkSpecifyChart(ListChart.V_Pop, urlCharts.V_PopUrlSong, urlCharts.V_PopUrlPlaylist, urlCharts.V_PopUrlVideo);
+        }
+
+        private void tggKPop_Click(object sender, RoutedEventArgs e)
+        {
+            if (tggKPop.IsChecked == false)
+            { tggKPop.IsChecked = true; return; }
+
+            SetMouseClickToggleButton(tggKPop, ref tggPrevCountry);
+            GetLinkSpecifyChart(ListChart.K_Pop, urlCharts.K_PopUrlSong, urlCharts.K_PopUrlPlaylist, urlCharts.K_PopUrlVideo);
+        }
+
+        private void PlayASong_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Song song = (sender as Image).DataContext as Song;
+
+            #region Way 1:
+            //switch (song.TypeOfSong)
+            //{
+            //    case TypeSong.Song:
+            //        song.RealUrlDownload = GetRealUrlSong(song.UrlSong);
+            //        break;
+            //    case TypeSong.Playlist:
+            //        song.RealUrlDownload = GetRealUrlPlaylist(song.UrlSong);
+            //        break;
+            //    case TypeSong.Video:
+            //        song.RealUrlDownload = GetRealUrlVideo(song.UrlSong);
+            //        break;
+            //}
+            #endregion
+
+            #region Way 2:
+            // Get Speical url contains all of datas of this Song but High Quality Music
+            String html = Manage.CrawlData(song.UrlSong);
+            string pattern = @"http://www.nhaccuatui.com/flash(.*?)""";
+            song.UrlData = Manage.GetFirstValueRegex(html, pattern).Value.Remove(0, 26).Replace("\"", "");
+            // Get Real UrlSong
+            html = Manage.CrawlData(song.UrlData);
+            pattern = @"<location>(.*?)</location>";
+            string data = Manage.GetFirstValueRegex(html, pattern).Value;
+            pattern = @"http://(.*?)]";
+            song.RealUrlDownload = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
+            // GetLyric: there are 2 lyric:
+            // + Karaoke and Normal Lyric
+            // If karaoke exists -> get it 
+            // Else get Normal Lyric if exists
+            if (song.TypeOfSong != TypeSong.Video)
+            {
+                // Check If lyric exists Karaoke:
+
+                if (!Regex.IsMatch(html, "<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>") && !Regex.IsMatch(html, "<lyric><![CDATA[]]></lyric>"))
+                {
+                    pattern = "<lyric>(.*?)</lyric>";
+                    data = Manage.GetFirstValueRegex(html, pattern).Value;
+                    pattern = @"http://(.*?)]";
+                    song.LinkLyric = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
+                    /* Lyric in NhacuaTui using RC4 and Hex to Encode with Key is:Lyr1cjust4nct
+                        * So First: Download file *.lyric
+                        * Second : copy data and start Decoding 
+                    */
+
+                    string HexLyric = Manage.DownloadLyric(song.LinkLyric);
+                    byte[] Lyric = RC4.HexStringToByteArray(HexLyric);
+                    byte[] key = Encoding.ASCII.GetBytes("Lyr1cjust4nct");
+                    Byte[] result = RC4.Decode(key, Lyric);
+                    song.Lyric= Encoding.UTF8.GetString(result);
+                }
+
+
+            }
+
+            #endregion
+
+
+        }
+
+        #region Get Real Url Download Song - Video - Playlist - Way 1
 
         /* Song and Playlist are the same kind of url:
                 * It has 2 kinds:  http://f9/.../mp3 or http://aredir/.../mp3
@@ -265,9 +265,9 @@ namespace App_Music.Chart
          * Video is deffrent from Song and Playlist
          * It's a video => Save file as *.mp4 : http://vredir/.../mp4 
          */
-        private string GetRealUrlSong(string FakeUrl)
+        private string GetRealUrlSong(string urlSong)
         {
-            string result = Manage.CrawlDataInWebMobile(FakeUrl);
+            string result = Manage.CrawlDataInWebMobile(urlSong);
 
             string pattern = @"http://aredir(.*?).mp3";
 
@@ -279,9 +279,9 @@ namespace App_Music.Chart
             return realUrlSong;
         }
 
-        private string GetRealUrlPlaylist(string FakeUrl)
+        private string GetRealUrlPlaylist(string urlSong)
         {
-            string result = Manage.CrawlDataInWebMobile(FakeUrl);
+            string result = Manage.CrawlDataInWebMobile(urlSong);
 
             string pattern = @"http://aredir(.*?).mp3";
 
@@ -294,9 +294,9 @@ namespace App_Music.Chart
         }
 
 
-        private string GetRealUrlVideo(string FakeUrl)
+        private string GetRealUrlVideo(string urlSong)
         {
-            string result = Manage.CrawlDataInWebMobile(FakeUrl);
+            string result = Manage.CrawlDataInWebMobile(urlSong);
 
             string pattern = @"http://vredir(.*?).mp4";
             string realUrlSong = Manage.GetFirstValueRegex(result, pattern, RegexOptions.Singleline).Value;
@@ -304,22 +304,19 @@ namespace App_Music.Chart
             return realUrlSong;
         }
 
-
-
         #endregion
 
 
+        //    private void lbPlaylist_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        //    {
+        //        Song song = (sender as ListBox).SelectedItem as Song;
+        //        if (song.RealUrlDownload[song.RealUrlDownload.Length - 1]=='4')
+        //            Manage.DownloadSong(song,".mp4");
+        //        else
+        //            Manage.DownloadSong(song, ".mp3");
+        //    }
 
-        private void lbPlaylist_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            Song song = (sender as ListBox).SelectedItem as Song;
-            if (song.RealUrlDownload[song.RealUrlDownload.Length - 1]=='4')
-                Manage.DownloadSong(song,".mp4");
-            else
-                Manage.DownloadSong(song, ".mp3");
-        }
 
-        
     }
 
 
@@ -341,4 +338,54 @@ namespace App_Music.Chart
         }
     }
     #endregion
+
+    //public class RC4
+    //{
+
+    //    public static byte[] Encrypt(byte[] pwd, byte[] data)
+    //    {
+    //        int a, i, j, k, tmp;
+    //        int[] key, box;
+    //        byte[] cipher;
+
+    //        key = new int[256];
+    //        box = new int[256];
+    //        cipher = new byte[data.Length];
+
+    //        for (i = 0; i < 256; i++)
+    //        {
+    //            key[i] = pwd[i % pwd.Length];
+    //            box[i] = i;// 0...255
+    //        }
+    //        // Random box
+    //        for (j = i = 0; i < 256; i++)
+    //        {
+    //            j = (j + box[i] + key[i]) % 256;
+    //            // swap
+    //            tmp = box[i];
+    //            box[i] = box[j];
+    //            box[j] = tmp;
+    //        }
+    //        for (a = j = i = 0; i < data.Length; i++)
+    //        {
+    //            a++;
+    //            a %= 256;
+    //            j += box[a]; // j=(j+box[a])%256
+    //            j %= 256;
+    //            tmp = box[a];
+    //            box[a] = box[j];
+    //            box[j] = tmp;
+    //            k = box[((box[a] + box[j]) % 256)];
+    //            cipher[i] = (byte)(data[i] ^ k);
+    //        }
+    //        return cipher;
+    //    }
+
+    //    public static byte[] Decrypt(byte[] pwd, byte[] data)
+    //    {
+    //        return Encrypt(pwd, data);
+    //    }
+
+    //}
+
 }

@@ -8,7 +8,9 @@ namespace App_Music.Class
 {
    public enum TypeSong
     {
+        None,
         Song,
-        Playlist,Video
+        Playlist,
+        Video
     }
 }

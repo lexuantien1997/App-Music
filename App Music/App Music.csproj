@@ -81,6 +81,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Algorithm\RC4.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -170,6 +171,28 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Download Song\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\ID Chart\_1.png" />
+    <Resource Include="Image\ID Chart\_10.png" />
+    <Resource Include="Image\ID Chart\_11.png" />
+    <Resource Include="Image\ID Chart\_12.png" />
+    <Resource Include="Image\ID Chart\_13.png" />
+    <Resource Include="Image\ID Chart\_14.png" />
+    <Resource Include="Image\ID Chart\_15.png" />
+    <Resource Include="Image\ID Chart\_16.png" />
+    <Resource Include="Image\ID Chart\_17.png" />
+    <Resource Include="Image\ID Chart\_18.png" />
+    <Resource Include="Image\ID Chart\_19.png" />
+    <Resource Include="Image\ID Chart\_2.png" />
+    <Resource Include="Image\ID Chart\_20.png" />
+    <Resource Include="Image\ID Chart\_3.png" />
+    <Resource Include="Image\ID Chart\_4.png" />
+    <Resource Include="Image\ID Chart\_5.png" />
+    <Resource Include="Image\ID Chart\_6.png" />
+    <Resource Include="Image\ID Chart\_7.png" />
+    <Resource Include="Image\ID Chart\_8.png" />
+    <Resource Include="Image\ID Chart\_9.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

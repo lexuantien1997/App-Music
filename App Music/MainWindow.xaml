@@ -164,7 +164,7 @@
                         
                     </Grid>
 
-                    <Grid Background="#404040" x:Name="gridMusic" Grid.Row="1">
+                    <Grid Background="#404040" x:Name="gridSong" Grid.Row="1">
                         
                     </Grid>
                 </Grid>

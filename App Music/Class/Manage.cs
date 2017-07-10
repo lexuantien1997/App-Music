@@ -12,14 +12,14 @@ namespace App_Music.Class
     public static class Manage
     {
 
-        private static int countSong=20;
+        private static int countSong = 20;
 
         private static HttpClient client = new HttpClient()
         {
-            BaseAddress = new Uri("http://www.nhaccuatui.com/")           
+            BaseAddress = new Uri("http://www.nhaccuatui.com/")
         };
 
-        private static HttpClient client1 = new HttpClient()
+        private static HttpClient clientDownload = new HttpClient()
         {
             BaseAddress = new Uri("http://m.nhaccuatui.com/")
         };
@@ -39,7 +39,7 @@ namespace App_Music.Class
 
         public static string CrawlDataInWebMobile(string url)
         {
-            string html = client1.GetStringAsync(url).Result;
+            string html = clientDownload.GetStringAsync(url).Result;
             return html;
         }
 
@@ -50,9 +50,9 @@ namespace App_Music.Class
         /// <param name="pattern">The input (Query) of Regex</param>
         /// <param name="rexOption">Regex Option using</param>
         /// <returns></returns>
-        public static MatchCollection GetDataWithRegex(string input,string pattern,RegexOptions rexOption=RegexOptions.None)
+        public static MatchCollection GetDataWithRegex(string input, string pattern, RegexOptions rexOption = RegexOptions.None)
         {
-            var courseList = Regex.Matches(input,pattern,rexOption);
+            var courseList = Regex.Matches(input, pattern, rexOption);
             return courseList;
         }
 
@@ -62,12 +62,23 @@ namespace App_Music.Class
             return courseList;
         }
 
-        public static void DownloadSong(Song song,string filter)
+        public static void DownloadSong(Song song, string filter)
         {
-            WebClient web = new WebClient();
-            web.DownloadFileAsync(new Uri(song.RealUrlDownload), AppDomain.CurrentDomain.BaseDirectory + "Download Song\\" + song.SongName + " - " + song.SingerName+filter);
+            using (WebClient web = new WebClient())
+            {
+                web.DownloadFileAsync(new Uri(song.RealUrlDownload), AppDomain.CurrentDomain.BaseDirectory + "Download Song\\" + song.SongName + " - " + song.SingerName + filter);
+            }
         }
 
+        public static string DownloadLyric(string address)
+        {
+            string HexLyric; 
+            using (WebClient web = new WebClient())
+            {
+                HexLyric = web.DownloadString(new Uri(address));
+            }
+            return HexLyric;
+        }
     }
        
 }

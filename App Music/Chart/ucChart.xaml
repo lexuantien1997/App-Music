@@ -11,9 +11,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="4"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -32,7 +32,7 @@
                 <DockPanel.Resources>
                     <local:ChangeValue ValueChange="3" x:Key="ChangeSomething"></local:ChangeValue>
                 </DockPanel.Resources>
-                <ToggleButton x:Name="tggUSUK" Click="tggUSUK_Click" Content="US/UK" Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpType, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
+                <ToggleButton x:Name="tggUSUK" Click="tggUSUK_Click"  Content="US/UK" Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpType, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
                 <ToggleButton x:Name="tggVPop" Click="tggVPop_Click" Content="V-POP"   Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpType, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
                 <ToggleButton x:Name="tggKPop" Click="tggKPop_Click" Content="K-POP"  Style="{DynamicResource DisplayButtonTypeMusic}" />
             </DockPanel>
@@ -41,18 +41,118 @@
                 <DockPanel.Resources>
                     <local:ChangeValue ValueChange="3" x:Key="ChangeSomething"></local:ChangeValue>
                 </DockPanel.Resources>
-                <ToggleButton x:Name="tggPlaylist"  Content="Playlist" Click="tggPlaylist_Click"   Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpTypeSong, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
-                <ToggleButton x:Name="tggSong"      Content="Song"     Click="tggSong_Click"       Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpTypeSong, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
-                <ToggleButton x:Name="tggMV"        Content="Video"    Click="tggMV_Click"         Style="{DynamicResource DisplayButtonTypeMusic}"/>
+                <ToggleButton x:Name="tggPlaylist" Click="tggTypeOfSong_Click"  Content="Playlist"  Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpTypeSong, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
+                <ToggleButton x:Name="tggSong"     Click="tggTypeOfSong_Click" Content="Song"      Style="{DynamicResource DisplayButtonTypeMusic}"  Width="{Binding ElementName=dpTypeSong, Path=ActualWidth ,Converter={ StaticResource ResourceKey=ChangeSomething}}"/>
+                <ToggleButton x:Name="tggVideo"       Click="tggTypeOfSong_Click" Content="Video"     Style="{DynamicResource DisplayButtonTypeMusic}"/>
             </DockPanel>
         </Grid>
 
-
         <Grid Grid.Row="4">
+            <ListBox x:Name="listBoxChart" BorderThickness="0" Background="#3C3C3C" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Name="_Border"
+                                Padding="2"
+                                RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter TargetName="_Border" Property="Background" Value="Transparent" />
+                                            <Setter Property="Foreground" Value="Transparent"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="90"  Width="910">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                            </Grid.RowDefinitions>
+                            <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="2,2,10,2"></Separator>
+                            <!-- Number Count -->
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="0" Margin="12" Source="{Binding ID}"  VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                            <!--Photo of singer-->
+                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="3" Grid.Column="1" Source="{Binding ImageSinger}"/>
+
+                            <Grid Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="350"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Song Name -->
+                                    <TextBlock ToolTip="{Binding SongName}" Text="{Binding SongName}" TextWrapping="Wrap" Margin="5 0 0 0" Grid.Row="0" FontWeight="DemiBold" Foreground="White"  FontSize="16" VerticalAlignment="Center"></TextBlock>
+                                    <!-- Artist Name -->
+                                    <TextBlock ToolTip="{Binding SingerName}" Text="{Binding SingerName}" Grid.Row="1" TextWrapping="NoWrap" Grid.Column ="0" Foreground="#CECECE" Margin="5 0 0 0"  FontSize="16" VerticalAlignment="Center"></TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Play -->
+                                    <Image x:Name="PlayASong" PreviewMouseUp="PlayASong_PreviewMouseUp" RenderOptions.BitmapScalingMode="NearestNeighbor" ToolTip="Play Song" Grid.Column="3"  Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\play.png" Height="25" Width="25"/>
+                                    <!-- Download-->
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" ToolTip="Download Song" Grid.Column="2" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\download.png" Height="25" Width="25">
+
+                                    </Image>
+                                    <!-- Favorite  -->
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="1" Height="32" Width="32" ToolTip="Favorite">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Source" Value="C:\Users\LeXuanTien\Documents\GitHub\Data\number\star.png"></Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Source" Value="C:\Users\LeXuanTien\Documents\GitHub\Data\number\star1.png"></Setter>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <!--Highest Position-->
+                                    <DockPanel Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" >
+                                        <Image ToolTip="Highest position" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\highestPosition.png" Height="25" Width="25" Margin="4"></Image>
+                                        <Label Content="{Binding HighestPosition}" VerticalAlignment="Center" Foreground="White" FontSize="16" Height="25" Margin="0,25,5,31" Width="35"/>
+
+                                    </DockPanel>
+
+
+                                </Grid>
+
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+        </Grid>
+
+        <!--<Grid Grid.Row="4">
             <Grid Grid.Column="0">
                 <ListBox x:Name="lbMain" ItemTemplate="{DynamicResource charts}"  PreviewMouseLeftButtonUp="lbPlaylist_PreviewMouseLeftButtonUp"  BorderThickness="0" Background="#3C3C3C" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
             </Grid>
-        </Grid>
+        </Grid>-->
 
     </Grid>
 </UserControl>
