@@ -161,11 +161,11 @@
                     </Grid.RowDefinitions>
 
                     <Grid  x:Name="GridMain">
-                        
+
                     </Grid>
 
-                    <Grid Background="#404040" x:Name="gridSong" Grid.Row="1">
-                        
+                    <Grid x:Name="gridPlaySong" Background="#404040"  Grid.Row="1">
+
                     </Grid>
                 </Grid>
             </Border>

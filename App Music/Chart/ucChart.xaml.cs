@@ -1,5 +1,6 @@
 ﻿using App_Music.Algorithm;
 using App_Music.Class;
+using App_Music.Play_Song___Video;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace App_Music.Chart
     /// </summary>
     public partial class ucChart : UserControl, INotifyPropertyChanged
     {
-
+        public object GetControl { get; set; }
         #region Binding data with INotifyPropertyChanged - UI
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -220,38 +221,16 @@ namespace App_Music.Chart
             // Get Real UrlSong
             html = Manage.CrawlData(song.UrlData);
             pattern = @"<location>(.*?)</location>";
-            string data = Manage.GetFirstValueRegex(html, pattern).Value;
+            string data = Manage.GetFirstValueRegex(html, pattern,RegexOptions.Singleline).Value;
             pattern = @"http://(.*?)]";
             song.RealUrlDownload = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
-            // GetLyric: there are 2 lyric:
-            // + Karaoke and Normal Lyric
-            // If karaoke exists -> get it 
-            // Else get Normal Lyric if exists
-            if (song.TypeOfSong != TypeSong.Video)
-            {
-                // Check If lyric exists Karaoke:
 
-                if (!Regex.IsMatch(html, "<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>") && !Regex.IsMatch(html, "<lyric><![CDATA[]]></lyric>"))
-                {
-                    pattern = "<lyric>(.*?)</lyric>";
-                    data = Manage.GetFirstValueRegex(html, pattern).Value;
-                    pattern = @"http://(.*?)]";
-                    song.LinkLyric = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
-                    /* Lyric in NhacuaTui using RC4 and Hex to Encode with Key is:Lyr1cjust4nct
-                        * So First: Download file *.lyric
-                        * Second : copy data and start Decoding 
-                    */
-
-                    string HexLyric = Manage.DownloadLyric(song.LinkLyric);
-                    byte[] Lyric = RC4.HexStringToByteArray(HexLyric);
-                    byte[] key = Encoding.ASCII.GetBytes("Lyr1cjust4nct");
-                    Byte[] result = RC4.Decode(key, Lyric);
-                    song.Lyric= Encoding.UTF8.GetString(result);
-                }
-
-
-            }
-
+            // Bing data into another user control
+            UIElementCollection UIControl = GetControl as UIElementCollection;
+            // Lyric will be gotten in ucPlaySong 
+            ucPlaySong PlaySong = UIControl[0] as ucPlaySong;
+            PlaySong.Input = html;
+            PlaySong.SongInfo = song;           
             #endregion
 
 
@@ -339,53 +318,5 @@ namespace App_Music.Chart
     }
     #endregion
 
-    //public class RC4
-    //{
-
-    //    public static byte[] Encrypt(byte[] pwd, byte[] data)
-    //    {
-    //        int a, i, j, k, tmp;
-    //        int[] key, box;
-    //        byte[] cipher;
-
-    //        key = new int[256];
-    //        box = new int[256];
-    //        cipher = new byte[data.Length];
-
-    //        for (i = 0; i < 256; i++)
-    //        {
-    //            key[i] = pwd[i % pwd.Length];
-    //            box[i] = i;// 0...255
-    //        }
-    //        // Random box
-    //        for (j = i = 0; i < 256; i++)
-    //        {
-    //            j = (j + box[i] + key[i]) % 256;
-    //            // swap
-    //            tmp = box[i];
-    //            box[i] = box[j];
-    //            box[j] = tmp;
-    //        }
-    //        for (a = j = i = 0; i < data.Length; i++)
-    //        {
-    //            a++;
-    //            a %= 256;
-    //            j += box[a]; // j=(j+box[a])%256
-    //            j %= 256;
-    //            tmp = box[a];
-    //            box[a] = box[j];
-    //            box[j] = tmp;
-    //            k = box[((box[a] + box[j]) % 256)];
-    //            cipher[i] = (byte)(data[i] ^ k);
-    //        }
-    //        return cipher;
-    //    }
-
-    //    public static byte[] Decrypt(byte[] pwd, byte[] data)
-    //    {
-    //        return Encrypt(pwd, data);
-    //    }
-
-    //}
 
 }

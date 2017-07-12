@@ -99,8 +99,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Play Song _ Video\ucPlaySong.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Play Song _ Video\ucPlaySongFullScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Play Song _ Video\ucPlaySong.xaml.cs">
+      <DependentUpon>ucPlaySong.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Play Song _ Video\ucPlaySongFullScreen.xaml.cs">
+      <DependentUpon>ucPlaySongFullScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -193,6 +207,16 @@
     <Resource Include="Image\ID Chart\_7.png" />
     <Resource Include="Image\ID Chart\_8.png" />
     <Resource Include="Image\ID Chart\_9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\play-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\pause %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\repeat %281%29.png" />
+    <Resource Include="Image\Play Song\repeat %282%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
