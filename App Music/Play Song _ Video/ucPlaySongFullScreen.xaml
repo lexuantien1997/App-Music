@@ -7,39 +7,122 @@
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="1130">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="3"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid x:Name="gridSongInfo">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock x:Name="tblSongName" Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"></TextBlock>
-            <TextBlock x:Name="tblSingerName" Grid.Row="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"></TextBlock>
-            <Grid Grid.Row="3">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                <GradientStop Color="#1C1D1C" Offset="0.01" />
+                <GradientStop Color="#525254" Offset="0.3" />
+                <GradientStop Color="#525254" Offset="0.3" />
+                <GradientStop Color="#505050" Offset="0.75" />
+                <GradientStop Color="#1C1D1C" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="120"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--Grid song info-->
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="350"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Canvas x:Name="cvCircle">
-                    <Ellipse Canvas.Left="145" Canvas.Top="26" Width="295" Height="295" RenderTransformOrigin="0.5,0.5">
-                        <Ellipse.Fill>
-                            <ImageBrush Stretch="Fill" ImageSource="http://avatar.nct.nixcdn.com/singer/avatar/2017/07/05/a/c/0/f/1499232347880_600.jpg"></ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                </Canvas>
+                <Grid Width="30" HorizontalAlignment="Left">
+                    <Image PreviewMouseDown="Image_PreviewMouseDown" ToolTip="Minimize option song" Margin="2" Source="/Image/Play Song/down-arrow.png" RenderOptions.BitmapScalingMode="Fant"/>
+                </Grid>
+                <!--Grid name's song and singer-->
+                <TextBlock x:Name="tblSongName" ToolTip="{Binding SongName }" FontWeight="DemiBold"  Foreground="#00D0FF"  Text="{Binding SongName}"   Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"></TextBlock>
+                <TextBlock x:Name="tblSingerName" ToolTip="Singer name" Foreground="#3AE8BF" Text="{Binding SingerName}" Grid.Row="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"></TextBlock>
+                <Grid Grid.Row="3">
+                    <RadioButton Click="rbListSong_Click" x:Name="rbListSong" Margin="205,434,181,2" Height="14" Width="14"/>
+                    <RadioButton Click="rbSingerImage_Click" x:Name="rbSingerImage" IsChecked="True" Margin="174,434,212,2" Height="14" Width="14"/>
+                    <Canvas x:Name="cvCircle" Height="430" Margin="0,4,0,0" VerticalAlignment="Top">
+                        <Ellipse Canvas.Left="37" Canvas.Top="52" Width="327" Height="321">
+                            <Ellipse.Fill>
+                                <ImageBrush Stretch="Fill" ImageSource="{Binding ImageSingerBigSize}"></ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
 
+                    </Canvas>
+                    <Grid x:Name="gridListSong" Margin="3 30 3 40" Visibility="Hidden">
+                        <ListBox x:Name="lbListSong" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border Name="_Border" Padding="2" RenderOptions.BitmapScalingMode="Fant">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="true">
+                                                        <Setter TargetName="_Border" Property="Background" Value="#363637" />
+                                                        <Setter Property="Foreground" Value="#363637"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="25">
+                                        <TextBlock PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown" TextAlignment="Center" Text="{Binding SongName}" Foreground="White" FontSize="14" ToolTip="{Binding SongName}" Margin="10 0 10 0" VerticalAlignment="Center"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <!--Grid lyric-->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <MediaElement x:Name="mediaPlayer" Visibility="Hidden"/>
+                </Grid>
+                <TextBlock  Foreground="White"  Text="Lyric"   Grid.Row="0" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"></TextBlock>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="tbPosition" Text="00:00" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="18,12,18,4"></TextBlock>
+                <TextBlock x:Name="tbDuration" Grid.Column="2" Text="00:00" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="18,12,18,4"></TextBlock>
+
+                <Slider x:Name="SliderTimeLine" Thumb.DragStarted="SliderTimeLine_DragStarted" Thumb.DragCompleted="SliderTimeLine_DragCompleted" MouseLeftButtonUp="SliderTimeLine_MouseLeftButtonUp" Margin="0 10 0 0" Grid.Column="1" VerticalAlignment="Center"></Slider>
             </Grid>
 
-        </Grid>
-
-        <Grid x:Name="gridLyric" Grid.Column="2">
+            <Canvas Grid.Row="1">
+                <Image  x:Name="imgPlayPause" PreviewMouseDown="imgPlayPause_PreviewMouseDown" RenderOptions.BitmapScalingMode="Fant" Source="{Binding SourceImage}" Height="25" Width="25" Canvas.Left="547" Canvas.Top="32"/>
+                <Image RenderOptions.BitmapScalingMode="Fant" Source="/Image/Play Song/back.png" Height="25" Width="25" Canvas.Left="414" Canvas.Top="32"/>
+                <Image RenderOptions.BitmapScalingMode="Fant" Source="/Image/Play Song/next.png" Height="25" Width="25" Canvas.Left="678" Canvas.Top="32"/>
+                <Image RenderOptions.BitmapScalingMode="Fant" Source="/Image/Play Song/download.png" Height="25" Width="25" Canvas.Left="249" Canvas.Top="32"/>
+                <Image RenderOptions.BitmapScalingMode="Fant" Source="/Image/Play Song/repeat (1).png" Height="25" Width="25" Canvas.Left="848" Canvas.Top="32"/>
+            </Canvas>
 
         </Grid>
     </Grid>
+
 </UserControl>

@@ -10,9 +10,9 @@ namespace App_Music.Algorithm
     {
         // https://www.slideshare.net/lehung123/h-mt-rc4-presentation
         /* RC4 using:
-         * 2 registers with 8 bits : Q1 & Q2 
-         * S_Block length=256 bit=8 . Value's S is random from 0..255
-         *  Based procedure of RC4 is create Gramma. Because When you have Gramma you have just been XOR with S
+         * 2 registers 8 bits : Q1 & Q2 
+         * S_Block length=256 bit=8 . Value's S randoms from 0..255
+         *  Based procedure of RC4 is create Gramma. Because When you have Gramma you just XOR with S
          */
 
         // There are 3 step to encode/decode RC4

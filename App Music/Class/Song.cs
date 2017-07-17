@@ -8,20 +8,27 @@ namespace App_Music.Class
 {
     public class Song
     {
-        private string iD;
+        private string iD=null;
+
         private string imageSinger;
+        private string imageSingerBigSize=null;
+        // name
         private string songName;
         private string singerName;
-        private string highestPosition;
-        private string urlSong;
+
+        private string highestPosition=null;
+        // Lyric
         private string lyric=null;
-        private string linkLyric = null;
+        private string linkLyric;
+
         private bool isFavorited=false;
+        // url
         private string realUrlDownload;
-        private TypeSong typeOfSong;
+        private string urlSong;
         private string urlData;
 
-
+        private TypeSong typeOfSong=TypeSong.None;
+       
         public string SongName { get => songName; set => songName = value; }
         public string SingerName { get => singerName; set => singerName = value; }
         public string UrlSong { get => urlSong; set => urlSong = value; }
@@ -34,5 +41,6 @@ namespace App_Music.Class
         public TypeSong TypeOfSong { get => typeOfSong; set => typeOfSong = value; }
         public string UrlData { get => urlData; set => urlData = value; }
         public string LinkLyric { get => linkLyric; set => linkLyric = value; }
+        public string ImageSingerBigSize { get => imageSingerBigSize; set => imageSingerBigSize = value; }
     }
 }

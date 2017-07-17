@@ -34,18 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.MahApps, Version=0.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.MahApps.0.0.10\lib\net45\MaterialDesignThemes.MahApps.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -142,12 +130,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Image\Icon\sans_shinigami_by_nabuco88-da9pa7d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons8-Home-50.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Image\Icon\statistics.png" />
   </ItemGroup>
   <ItemGroup>
@@ -184,9 +166,6 @@
     <Resource Include="Image\Icon\settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Download Song\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Image\ID Chart\_1.png" />
     <Resource Include="Image\ID Chart\_10.png" />
     <Resource Include="Image\ID Chart\_11.png" />
@@ -215,8 +194,26 @@
     <Resource Include="Image\Play Song\pause %281%29.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\Play Song\left-arrow-chevron.png" />
+    <Resource Include="Image\Play Song\move-to-the-next-page-symbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="star1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\back.png" />
+    <Resource Include="Image\Play Song\download.png" />
+    <Resource Include="Image\Play Song\next.png" />
     <Resource Include="Image\Play Song\repeat %281%29.png" />
-    <Resource Include="Image\Play Song\repeat %282%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\down-arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\i_love_music_2-wallpaper-2880x1800.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

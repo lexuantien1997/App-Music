@@ -46,6 +46,7 @@
         <Style TargetType="Image" x:Key="SetImageMenu">
             <Setter Property="Margin" Value="20 0 0 0"/>
             <Setter Property="Width" Value="30"/>
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant"/> 
         </Style>
         
         <!--Set style of button menu-->

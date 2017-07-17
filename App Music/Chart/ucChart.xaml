@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:App_Music.Chart"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="615" d:DesignWidth="930" FontFamily="cambria">
 
@@ -84,9 +83,9 @@
                             </Grid.RowDefinitions>
                             <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="2,2,10,2"></Separator>
                             <!-- Number Count -->
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="0" Margin="12" Source="{Binding ID}"  VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                            <Image RenderOptions.BitmapScalingMode="Fant" Grid.Column="0" Margin="12" Source="{Binding ID}"  VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
                             <!--Photo of singer-->
-                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="3" Grid.Column="1" Source="{Binding ImageSinger}"/>
+                            <Image RenderOptions.BitmapScalingMode="Fant" Margin="3" Grid.Column="1" Source="{Binding ImageSinger}"/>
 
                             <Grid Grid.Column="2">
                                 <Grid.ColumnDefinitions>
@@ -112,13 +111,13 @@
                                         <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
                                     <!-- Play -->
-                                    <Image x:Name="PlayASong" PreviewMouseUp="PlayASong_PreviewMouseUp" RenderOptions.BitmapScalingMode="NearestNeighbor" ToolTip="Play Song" Grid.Column="3"  Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\play.png" Height="25" Width="25"/>
+                                    <Image x:Name="PlayASong" RenderOptions.BitmapScalingMode="Fant" PreviewMouseDown="PlayASong_PreviewMouseDown" ToolTip="Play Song" Grid.Column="3"  Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\play.png" Height="25" Width="25"/>
                                     <!-- Download-->
-                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" ToolTip="Download Song" Grid.Column="2" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\download.png" Height="25" Width="25">
+                                    <Image RenderOptions.BitmapScalingMode="Fant" ToolTip="Download Song" Grid.Column="2" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\download.png" Height="25" Width="25">
 
                                     </Image>
                                     <!-- Favorite  -->
-                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Grid.Column="1" Height="32" Width="32" ToolTip="Favorite">
+                                    <Image RenderOptions.BitmapScalingMode="Fant" Grid.Column="1" Height="32" Width="32" ToolTip="Favorite">
                                         <Image.Style>
                                             <Style TargetType="Image">
                                                 <Setter Property="Source" Value="C:\Users\LeXuanTien\Documents\GitHub\Data\number\star.png"></Setter>
@@ -132,7 +131,7 @@
                                     </Image>
                                     <!--Highest Position-->
                                     <DockPanel Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" >
-                                        <Image ToolTip="Highest position" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\highestPosition.png" Height="25" Width="25" Margin="4"></Image>
+                                        <Image RenderOptions.BitmapScalingMode="Fant" ToolTip="Highest position" Source="C:\Users\LeXuanTien\Documents\GitHub\Data\number\highestPosition.png" Height="25" Width="25" Margin="4"></Image>
                                         <Label Content="{Binding HighestPosition}" VerticalAlignment="Center" Foreground="White" FontSize="16" Height="25" Margin="0,25,5,31" Width="35"/>
 
                                     </DockPanel>
@@ -147,12 +146,6 @@
 
             </ListBox>
         </Grid>
-
-        <!--<Grid Grid.Row="4">
-            <Grid Grid.Column="0">
-                <ListBox x:Name="lbMain" ItemTemplate="{DynamicResource charts}"  PreviewMouseLeftButtonUp="lbPlaylist_PreviewMouseLeftButtonUp"  BorderThickness="0" Background="#3C3C3C" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
-            </Grid>
-        </Grid>-->
 
     </Grid>
 </UserControl>

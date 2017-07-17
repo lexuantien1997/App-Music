@@ -5,6 +5,10 @@ using System.Windows.Data;
 using System.Windows.Input;
 using App_Music.Chart;
 using System.Windows.Controls.Primitives;
+using App_Music.Play_Song___Video;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace App_Music
 {
@@ -13,20 +17,59 @@ namespace App_Music
     /// </summary>
     public partial class MainWindow : Window/*, INotifyPropertyChanged*/
     {
-
+        public static MediaElement mediaPlayer;
+        ucPlaySongFullScreen PlaySongFull = new ucPlaySongFullScreen();
+        ucPlaySong PlaySong = new ucPlaySong();
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
-            btnHome_Click(null,null);
-            
+            // add user control
+            PlaySong.MinimizeFullScreen += PlaySong_MinimizeFullScreen;
+            PlaySong.PlayPauseChanged += PlaySongFull_PlayPauseChanged;
+            //  ucPlaySong.grid = gridApp;
+            gridPlaySong.Children.Add(PlaySong);
+            // add user control
+            PlaySongFull.MinimizeFullScreen += PlaySongFull_MinimizeFullScreen;
+            PlaySongFull.PlayPauseChanged += PlaySongFull_PlayPauseChanged; ;
+            gridApp.Children.Add(PlaySongFull);
+            gridApp.Children[1].Visibility = Visibility.Hidden;
+            btnHome_Click(null, null);
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        #region Binding button play - pause
+        bool IsPlayed = true;
+        private void PlaySongFull_PlayPauseChanged(object sender, EventArgs e)
         {
-            Play_Song___Video.ucPlaySong PlaySong = new Play_Song___Video.ucPlaySong();            
-            gridPlaySong.Children.Add(PlaySong);
+            if (IsPlayed == true)
+            {
+                mediaPlayer.Pause();
+                PlaySong.SourceImage = "/Image/Play Song/pause (1).png";
+                PlaySongFull.SourceImage = "/Image/Play Song/pause (1).png";
+            }
+            else
+            {
+                mediaPlayer.Play();
+                PlaySong.SourceImage = "/Image/Play Song/play-button.png";
+                PlaySongFull.SourceImage = "/Image/Play Song/play-button.png";
+            }
+            IsPlayed = !IsPlayed;
         }
+
+        #endregion
+
+        #region Binding minimize 
+        private void PlaySongFull_MinimizeFullScreen(object sender, EventArgs e)
+        {
+            gridApp.Children[1].Visibility = Visibility.Hidden;
+            gridApp.Children[0].Visibility = Visibility.Visible;
+        }
+
+        private void PlaySong_MinimizeFullScreen(object sender, EventArgs e)
+        {
+            gridApp.Children[0].Visibility = Visibility.Hidden;
+            gridApp.Children[1].Visibility = Visibility.Visible;
+        }
+        #endregion
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
@@ -43,6 +86,8 @@ namespace App_Music
             if (Mouse.LeftButton == MouseButtonState.Pressed)
                 DragMove();
         }
+
+        
         #region Click into every toggle button in menu option
 
 
@@ -60,7 +105,7 @@ namespace App_Music
         {
             BindingMouseClick(btnCharts);
             ucChart Charts = new ucChart();
-            Charts.GetControl = gridPlaySong.Children;
+            Charts.GetControl = gridApp.Children;
             GridMain.Children.Clear();
             GridMain.Children.Add(Charts);
         }

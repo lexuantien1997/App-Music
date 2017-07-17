@@ -22,6 +22,7 @@ namespace App_Music.Chart
     public partial class ucChart : UserControl, INotifyPropertyChanged
     {
         public object GetControl { get; set; }
+
         #region Binding data with INotifyPropertyChanged - UI
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -30,10 +31,28 @@ namespace App_Music.Chart
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-
         }
         #endregion
+        public ucChart()
+        {
+            InitializeComponent();
 
+
+            urlCharts.GetUrlCharts();
+            tggSong.IsChecked = true;
+            tggVPop.IsChecked = true;
+            SetMouseClickToggleButton(tggSong, ref tggPrevTypeSong);
+            tggVPop_Click(null, null);
+        }
+
+
+        /// <summary>
+        /// Start Crawling 20 song of a chart 
+        /// </summary>
+        /// <param name="inputLink"></param>
+        /// <param name="lSong"></param>
+        /// <param name="typeSong"></param>
+        /// <returns></returns>
         List<Song> CrawlAChart(string inputLink, List<Song> lSong, TypeSong typeSong)
         {
             string html = Manage.CrawlData(inputLink);
@@ -49,7 +68,13 @@ namespace App_Music.Chart
         }
 
 
-
+        /// <summary>
+        /// Get data's song
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="typeSong"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Song GetASong(string input, TypeSong typeSong, string id)
         {
             Song song = new Song();
@@ -79,6 +104,11 @@ namespace App_Music.Chart
             return song;
         }
 
+        /// <summary>
+        /// Get Singer name and artist name
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         string[] GetSingerNameAndArtist(string input)
         {
             string pattern = @"title=""(.*?)"">";
@@ -100,17 +130,7 @@ namespace App_Music.Chart
             return SongSinger;
         }
 
-        public ucChart()
-        {
-            InitializeComponent();
 
-
-            urlCharts.GetUrlCharts();
-            tggSong.IsChecked = true;
-            tggVPop.IsChecked = true;
-            SetMouseClickToggleButton(tggSong, ref tggPrevTypeSong);
-            tggVPop_Click(null, null);
-        }
 
         ToggleButton tggPrevCountry = null;
         ToggleButton tggPrevTypeSong = null;
@@ -194,48 +214,6 @@ namespace App_Music.Chart
             GetLinkSpecifyChart(ListChart.K_Pop, urlCharts.K_PopUrlSong, urlCharts.K_PopUrlPlaylist, urlCharts.K_PopUrlVideo);
         }
 
-        private void PlayASong_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            Song song = (sender as Image).DataContext as Song;
-
-            #region Way 1:
-            //switch (song.TypeOfSong)
-            //{
-            //    case TypeSong.Song:
-            //        song.RealUrlDownload = GetRealUrlSong(song.UrlSong);
-            //        break;
-            //    case TypeSong.Playlist:
-            //        song.RealUrlDownload = GetRealUrlPlaylist(song.UrlSong);
-            //        break;
-            //    case TypeSong.Video:
-            //        song.RealUrlDownload = GetRealUrlVideo(song.UrlSong);
-            //        break;
-            //}
-            #endregion
-
-            #region Way 2:
-            // Get Speical url contains all of datas of this Song but High Quality Music
-            String html = Manage.CrawlData(song.UrlSong);
-            string pattern = @"http://www.nhaccuatui.com/flash(.*?)""";
-            song.UrlData = Manage.GetFirstValueRegex(html, pattern).Value.Remove(0, 26).Replace("\"", "");
-            // Get Real UrlSong
-            html = Manage.CrawlData(song.UrlData);
-            pattern = @"<location>(.*?)</location>";
-            string data = Manage.GetFirstValueRegex(html, pattern,RegexOptions.Singleline).Value;
-            pattern = @"http://(.*?)]";
-            song.RealUrlDownload = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
-
-            // Bing data into another user control
-            UIElementCollection UIControl = GetControl as UIElementCollection;
-            // Lyric will be gotten in ucPlaySong 
-            ucPlaySong PlaySong = UIControl[0] as ucPlaySong;
-            PlaySong.Input = html;
-            PlaySong.SongInfo = song;           
-            #endregion
-
-
-        }
-
         #region Get Real Url Download Song - Video - Playlist - Way 1
 
         /* Song and Playlist are the same kind of url:
@@ -286,16 +264,23 @@ namespace App_Music.Chart
         #endregion
 
 
-        //    private void lbPlaylist_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        //    {
-        //        Song song = (sender as ListBox).SelectedItem as Song;
-        //        if (song.RealUrlDownload[song.RealUrlDownload.Length - 1]=='4')
-        //            Manage.DownloadSong(song,".mp4");
-        //        else
-        //            Manage.DownloadSong(song, ".mp3");
-        //    }
+        private void PlayASong_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Song song = (sender as Image).DataContext as Song;
+            List<Song> lSongTemp = listBoxChart.ItemsSource as List<Song>;
+            int index = lSongTemp.IndexOf(song);
+            // Get list Song
+            List<Song> lSong = new List<Song>();
+            lSong.AddRange(lSongTemp);
+            lSong.RemoveRange(0, index);
 
-
+            //Bing data into another user control
+            UIElementCollection UIControl = GetControl as UIElementCollection;
+            // Lyric will be gotten in ucPlaySong 
+            ucPlaySongFullScreen PlaySongFullScreen = UIControl[1] as ucPlaySongFullScreen;
+            // PlaySongFullScreen.Input = html;
+            PlaySongFullScreen.SongInfo = lSong;
+        }
     }
 
 
