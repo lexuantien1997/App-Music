@@ -215,5 +215,14 @@
   <ItemGroup>
     <Resource Include="Image\Play Song\i_love_music_2-wallpaper-2880x1800.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\star.png" />
+    <Resource Include="Image\Play Song\star1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Play Song\downloadChart.png" />
+    <Resource Include="Image\Play Song\highestPosition.png" />
+    <Resource Include="Image\Play Song\playChart.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

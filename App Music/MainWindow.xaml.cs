@@ -36,6 +36,8 @@ namespace App_Music
             btnHome_Click(null, null);
         }
 
+      
+
         #region Binding button play - pause
         bool IsPlayed = true;
         private void PlaySongFull_PlayPauseChanged(object sender, EventArgs e)
@@ -87,7 +89,7 @@ namespace App_Music
                 DragMove();
         }
 
-        
+
         #region Click into every toggle button in menu option
 
 
