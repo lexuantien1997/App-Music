@@ -79,6 +79,13 @@ namespace App_Music.Class
             }
             return HexLyric;
         }
+
+        public static string GetNormalLyric(string address)
+        {
+            string html = WebUtility.HtmlDecode(client.GetStringAsync(address).Result);
+            return html;
+        }
+            
     }
        
 }

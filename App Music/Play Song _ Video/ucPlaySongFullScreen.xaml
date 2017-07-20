@@ -86,13 +86,20 @@
             <!--Grid lyric-->
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1">
                     <MediaElement x:Name="mediaPlayer" Visibility="Hidden"/>
+                    <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <TextBlock ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="lbLyric"  Margin="0 10 0 0" FontSize="16" Foreground="White" TextAlignment="Center"  Visibility="Hidden"></TextBlock>
+                    </ScrollViewer>
                 </Grid>
-                <TextBlock  Foreground="White"  Text="Lyric"   Grid.Row="0" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"></TextBlock>
+                <Grid Grid.Row="2">
+                    <RadioButton x:Name="rbNormalLyric" Height="14" Width="14" RenderTransformOrigin="1.875,0.521" Margin="388,7,326,9"></RadioButton>
+                    <RadioButton x:Name="rbKaraokeLyric" IsChecked="True" Height="14" Width="14" RenderTransformOrigin="1.875,0.521" Margin="364,7,350,9"></RadioButton>
+                </Grid>
             </Grid>
         </Grid>
         <Grid Grid.Row="1">

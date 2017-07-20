@@ -19,6 +19,7 @@ namespace App_Music.Class
         private string highestPosition=null;
         // Lyric
         private string lyric=null;
+        private string karaokeLyric = null;
         private string linkLyric;
 
         private bool isFavorited=false;
@@ -42,5 +43,6 @@ namespace App_Music.Class
         public string UrlData { get => urlData; set => urlData = value; }
         public string LinkLyric { get => linkLyric; set => linkLyric = value; }
         public string ImageSingerBigSize { get => imageSingerBigSize; set => imageSingerBigSize = value; }
+        public string KaraokeLyric { get => karaokeLyric; set => karaokeLyric = value; }
     }
 }

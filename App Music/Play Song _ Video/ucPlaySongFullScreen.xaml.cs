@@ -100,45 +100,59 @@ namespace App_Music.Play_Song___Video
         {
             if (CurrentSong.TypeOfSong != TypeSong.Video)
             {
-                if (CurrentSong.Lyric == null)
-                {
-                    // GetLyric: there are 2 lyric:
-                    // + Karaoke and Normal Lyric
-                    // If karaoke exists -> get it 
-                    // Else get Normal Lyric if exists
-                    if (CurrentSong.TypeOfSong != TypeSong.Video) // get karaoke lyric
-                    {
-                        // Check If lyric exists Karaoke:
-                        // wtf ?? Not Working ??? Regex.IsMatch(html, @"<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>") == false && !Regex.IsMatch(html, @"<lyric><![CDATA[]]></lyric>")
-                        if (Regex.IsMatch(html, @"<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>", RegexOptions.Singleline) == false && Regex.IsMatch(html, @"<lyric><![CDATA[]]></lyric>", RegexOptions.Singleline) == false)
-                        {
-                            string pattern = "<lyric>(.*?)</lyric>";
-                            string data = Manage.GetFirstValueRegex(html, pattern).Value;
-                            pattern = @"http://(.*?)]";
-                            CurrentSong.LinkLyric = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
-                            /* Lyric in NhacuaTui using RC4 and Hex to Encode with Key is:Lyr1cjust4nct
-                                * So First: Download file *.lyric
-                                * Second : copy data and start Decoding 
-                            */
-
-                            string HexLyric = Manage.DownloadLyric(CurrentSong.LinkLyric);
-                            // Change Key to byte[]
-                            byte[] Lyric = RC4.HexStringToByteArray(HexLyric);
-                            byte[] key = Encoding.ASCII.GetBytes("Lyr1cjust4nct");
-                            // Start Decode
-                            Byte[] result = RC4.Decode(key, Lyric);
-                            CurrentSong.Lyric = Encoding.UTF8.GetString(result);
-                        }
-                    }
-                    else // Get normal lyric
-                    {
-
-                    }
-                }
+                GetKaraokeLyric(html);
+                GetNormalLyric();
+                rbKaraokeLyric_Click(rbKaraokeLyric, null);
             }
-
         }
 
+        void GetKaraokeLyric(string html)
+        {
+            if (CurrentSong.KaraokeLyric == null)
+            {
+                // GetLyric: there are 2 lyric:
+                // + Karaoke and Normal Lyric
+                // If karaoke exists -> get it 
+                // Else get Normal Lyric if exists
+                if (CurrentSong.TypeOfSong != TypeSong.Video) // get karaoke lyric
+                {
+                    // Check If lyric exists Karaoke:
+                    //if (Regex.IsMatch(html, "<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>", RegexOptions.Singleline) == true || Regex.IsMatch(html, "<lyric><![CDATA[]]></lyric>", RegexOptions.Singleline) == true)
+                    if (html.Contains("<lyric><![CDATA[http://lrc.nct.nixcdn.com/null]]></lyric>") || html.Contains("<lyric><![CDATA[]]></lyric>"))
+                        return;
+                    string pattern = "<lyric>(.*?)</lyric>";
+                    string data = Manage.GetFirstValueRegex(html, pattern).Value;
+                    pattern = @"http://(.*?)]";
+                    CurrentSong.LinkLyric = Manage.GetFirstValueRegex(data, pattern).Value.Replace("]", "");
+                    /* Lyric in NhacuaTui using RC4 and Hex to Encode with Key is:Lyr1cjust4nct
+                        * So First: Download file *.lyric
+                        * Second : copy data and start Decoding 
+                    */
+
+                    string HexLyric = Manage.DownloadLyric(CurrentSong.LinkLyric);
+                    // Change Key to byte[]
+                    byte[] Lyric = RC4.HexStringToByteArray(HexLyric);
+                    byte[] key = Encoding.ASCII.GetBytes("Lyr1cjust4nct");
+                    // Start Decode
+                    Byte[] result = RC4.Decode(key, Lyric);
+                    CurrentSong.KaraokeLyric = Encoding.UTF8.GetString(result);
+
+                }
+            }
+        }
+
+        void GetNormalLyric()
+        {
+            if (CurrentSong.Lyric == null)
+            {
+                string html = Manage.GetNormalLyric(CurrentSong.UrlSong);
+                string pattern = @"id=""divLyric""(.*?)</p>";
+                html = Manage.GetFirstValueRegex(html, pattern, RegexOptions.Singleline).Value;
+                pattern = @"<br />(.*?)</p>";
+                html = Manage.GetFirstValueRegex(html, pattern, RegexOptions.Singleline).Value;
+                CurrentSong.Lyric = html.Replace("<br />", "").Replace("</p>", "");
+            }
+        }
         /// <summary>
         /// Get big size image
         /// </summary>
@@ -165,17 +179,27 @@ namespace App_Music.Play_Song___Video
                     data = Manage.GetFirstValueRegex(data, pattern, RegexOptions.Singleline).Value;
                     CurrentSong.ImageSingerBigSize = data.Replace(@"""", "");
                 }
-                
+
             }
         }
         private void Setting()
         {
             string html = GetRealUrlDownload();
             // Check Tyesong
-            if (CurrentSong.TypeOfSong==TypeSong.Video)            
+            if (CurrentSong.TypeOfSong == TypeSong.Video)
+            {
                 mediaPlayer.Visibility = System.Windows.Visibility.Visible; // Show Video
+                lbLyric.Visibility = System.Windows.Visibility.Hidden;
+                rbKaraokeLyric.Click -= rbKaraokeLyric_Click;
+                rbNormalLyric.Click -= rbNormalLyric_Click;
+            }
             else
+            {
+                lbLyric.Visibility = System.Windows.Visibility.Visible;
                 mediaPlayer.Visibility = System.Windows.Visibility.Hidden; // Hide Video
+                rbKaraokeLyric.Click += rbKaraokeLyric_Click;
+                rbNormalLyric.Click += rbNormalLyric_Click;
+            }
             // Binding from another user control
             ucPlaySong.mediaPlayer = mediaPlayer;
             MainWindow.mediaPlayer = mediaPlayer;
@@ -186,13 +210,15 @@ namespace App_Music.Play_Song___Video
             tbSongName.Text = CurrentSong.SongName;
             // Get Big Image
             GetBigImage(html);
+            // asyn Get Lyric
+            //Task t = new Task(() => { GetLyRic(html); });
+            //t.Start();
+            GetLyRic(html);
             // Bingding data context
             DataContext = CurrentSong;
-            // asyn Get Lyric
-            Task t = new Task(() => { GetLyRic(html); });
-            t.Start();
+
             //
-            lbListSong.ItemsSource = SongInfo;           
+            lbListSong.ItemsSource = SongInfo;
             // Setting media
             mediaPlayer.LoadedBehavior = MediaState.Manual;
             mediaPlayer.Source = new Uri(CurrentSong.RealUrlDownload);
@@ -332,6 +358,21 @@ namespace App_Music.Play_Song___Video
         {
             CurrentSong = (sender as TextBlock).DataContext as Song;
             Setting();
+        }
+
+        private void rbNormalLyric_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (rbNormalLyric.IsChecked == true && CurrentSong.Lyric != null)
+                lbLyric.Text = CurrentSong.Lyric;
+        }
+
+        private void rbKaraokeLyric_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (rbNormalLyric.IsChecked == true)
+                rbKaraokeLyric.IsChecked = true;
+
+            if (rbKaraokeLyric.IsChecked == true && CurrentSong.KaraokeLyric != null)
+                lbLyric.Text = CurrentSong.KaraokeLyric;
         }
     }
 }
